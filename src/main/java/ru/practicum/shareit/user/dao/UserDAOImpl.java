@@ -35,7 +35,7 @@ public class UserDAOImpl implements UserDAO {
     public User updateUser(User user) {
         User userInDB = new ArrayList<>(users.values())
                 .stream()
-                .filter(u -> u.getId() == user.getId())
+                .filter(u -> u.getId().longValue() == user.getId().longValue())
                 .findFirst()
                 .get();
         if (user.getEmail() != null &&

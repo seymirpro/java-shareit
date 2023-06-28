@@ -53,7 +53,7 @@ public class UserService {
         } else {
             user.setId(userActualInfo.getId());
             User userInDb = userDAO.getUserByEmail(user);
-            if (userInDb != null && user.getId() != userInDb.getId()) {
+            if (userInDb != null && user.getId().longValue() != userInDb.getId().longValue()) {
                 throw new RuntimeException();
             }
             userDAO.updateUser(user);
