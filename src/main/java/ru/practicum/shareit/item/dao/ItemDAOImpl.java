@@ -40,7 +40,7 @@ public class ItemDAOImpl implements ItemDAO {
     public List<Item> getAllUserItems(Long id) {
         List<Item> userItems = items.stream()
                 .filter(i ->
-                        i.getOwner().getId() == id)
+                        i.getOwner().getId().longValue() == id.longValue())
                 .collect(Collectors.toList());
         return userItems;
     }
