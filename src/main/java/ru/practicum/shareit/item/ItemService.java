@@ -44,16 +44,14 @@ public class ItemService {
         }
 
         item.setOwner(user);
-        log.info("line {}", 45);
 
         Item itemUpd = getItemByID(item.getId());
         if (itemUpd == null) {
             throw new ItemDoesNotExistException();
         }
 
-        log.info("line {}", 52);
 
-        if (itemUpd.getOwner().getId() != item.getOwner().getId()) {
+        if (itemUpd.getOwner().getId().longValue() != item.getOwner().getId().longValue()) {
             throw new NotItemOwnerException();
         }
 
