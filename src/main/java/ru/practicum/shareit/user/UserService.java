@@ -38,7 +38,7 @@ public class UserService {
     }
 
     public User getUserByID(Long id) {
-        User user = userDAO.getUserByID(id.longValue());
+        User user = userDAO.getUserByID(id);
         if (user == null) {
             throw new UserDoesNotExistException();
         }
@@ -47,7 +47,7 @@ public class UserService {
     }
 
     public User updateUser(Long id, User user) {
-        User userActualInfo = userDAO.getUserByID(id.longValue());
+        User userActualInfo = userDAO.getUserByID(id);
         if (userActualInfo == null) {
             throw new UserDoesNotExistException();
         } else {
@@ -62,10 +62,10 @@ public class UserService {
     }
 
     public User deleteUserByID(Long id) {
-        User user = getUserByID(id.longValue());
+        User user = getUserByID(id);
         if (user == null) {
             throw new UserDoesNotExistException();
         }
-        return userDAO.deleteUserByID(id.longValue());
+        return userDAO.deleteUserByID(id);
     }
 }

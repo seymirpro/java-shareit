@@ -61,23 +61,19 @@ public class ItemService {
             itemUpd.setAvailable(item.getAvailable());
         }
 
-        log.info("line {}", 62);
 
 
         if (item.getName() != null && !item.getName().equals(itemUpd.getName())) {
             itemUpd.setName(item.getName());
         }
 
-        log.info("line {}", 69);
 
         if (item.getDescription() != null &&
                 !item.getDescription().equals(itemUpd.getDescription())) {
             itemUpd.setDescription(item.getDescription());
         }
 
-        log.info("line {}", 75);
 
-        log.info("final object state {}", itemUpd.toString());
 
         return itemDao.updateItem(itemUpd);
     }

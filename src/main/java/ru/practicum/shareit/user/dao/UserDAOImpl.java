@@ -57,7 +57,7 @@ public class UserDAOImpl implements UserDAO {
     public User getUserByID(Long id) {
         Optional<User> userOptional = users.values()
                 .stream()
-                .filter(u -> u.getId() == id)
+                .filter(u -> u.getId().longValue() == id.longValue())
                 .findFirst();
 
         return userOptional.orElseGet(() -> null);
