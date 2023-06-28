@@ -37,9 +37,9 @@ public class UserService {
         return userDAO.getUsers();
     }
 
-    public User getUserByID(Long id){
+    public User getUserByID(Long id) {
         User user = userDAO.getUserByID(id);
-        if (user == null){
+        if (user == null) {
             throw new UserDoesNotExistException();
         }
 
@@ -53,7 +53,7 @@ public class UserService {
         } else {
             user.setId(userActualInfo.getId());
             User userInDb = userDAO.getUserByEmail(user);
-            if (userInDb != null && user.getId() != userInDb.getId()){
+            if (userInDb != null && user.getId() != userInDb.getId()) {
                 throw new RuntimeException();
             }
             userDAO.updateUser(user);
@@ -63,7 +63,7 @@ public class UserService {
 
     public User deleteUserByID(Long id) {
         User user = getUserByID(id);
-        if (user == null){
+        if (user == null) {
             throw new UserDoesNotExistException();
         }
         return userDAO.deleteUserByID(id);

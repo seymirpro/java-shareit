@@ -13,6 +13,7 @@ import java.util.Optional;
 public class UserDAOImpl implements UserDAO {
     private static long id = 0;
     private static HashMap<String, User> users = new HashMap<>();
+
     @Override
     public User createUser(User user) {
         user.setId(++id);
@@ -26,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByEmail(User user){
+    public User getUserByEmail(User user) {
         return users.get(user.getEmail());
     }
 
@@ -38,13 +39,13 @@ public class UserDAOImpl implements UserDAO {
                 .findFirst()
                 .get();
         if (user.getEmail() != null &&
-                !user.getEmail().equals(userInDB.getEmail())){
+                !user.getEmail().equals(userInDB.getEmail())) {
             users.remove(userInDB.getEmail());
         } else {
             user.setEmail(userInDB.getEmail());
         }
 
-        if (user.getName() == null){
+        if (user.getName() == null) {
             user.setName(userInDB.getName());
         }
 

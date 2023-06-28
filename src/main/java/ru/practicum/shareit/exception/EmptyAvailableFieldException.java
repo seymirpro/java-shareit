@@ -1,4 +1,4 @@
 package ru.practicum.shareit.exception;
 
-public class EmptyAvailableFieldException extends ValidationException{
+public class EmptyAvailableFieldException extends ValidationException {
 }

@@ -28,9 +28,10 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getLocalizedMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({UserDoesNotExistException.class, ItemDoesNotExistException.class
+            , NotItemOwnerException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserDoesNotExistException(final UserDoesNotExistException ex) {
+    public ErrorResponse handleUserDoesNotExistException(final RuntimeException ex) {
         return new ErrorResponse(
                 String.format("Пользователь с данным id не существует \"%s\".",
                         ex.getLocalizedMessage())
