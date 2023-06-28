@@ -19,8 +19,8 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler({ValidationException.class, UserEmailNotFilledException.class
-            , MethodArgumentNotValidException.class
+    @ExceptionHandler({ValidationException.class, UserEmailNotFilledException.class,
+            MethodArgumentNotValidException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException ex) {
@@ -28,8 +28,8 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getLocalizedMessage());
     }
 
-    @ExceptionHandler({UserDoesNotExistException.class, ItemDoesNotExistException.class
-            , NotItemOwnerException.class})
+    @ExceptionHandler({UserDoesNotExistException.class, ItemDoesNotExistException.class,
+            NotItemOwnerException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserDoesNotExistException(final RuntimeException ex) {
         return new ErrorResponse(
