@@ -1,14 +1,16 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dao;
 
 
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl implements UserDAO {
     private static long id = 0;
     private static HashMap<String, User> users = new HashMap<>();
     @Override
@@ -52,12 +54,12 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public User getUserByID(Long id) {
-        User user = users.values()
+        Optional<User> userOptional = users.values()
                 .stream()
                 .filter(u -> u.getId() == id)
-                .findFirst()
-                .get();
-        return user;
+                .findFirst();
+
+        return userOptional.orElseGet(() -> null);
     }
 
     @Override

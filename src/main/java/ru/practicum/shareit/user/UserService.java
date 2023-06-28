@@ -3,10 +3,11 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.InvalidUserEmailException;
 import ru.practicum.shareit.exception.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.UserDoesNotExistException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 

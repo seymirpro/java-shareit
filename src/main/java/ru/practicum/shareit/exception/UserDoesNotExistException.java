@@ -1,4 +1,4 @@
 package ru.practicum.shareit.exception;
 
-public class UserDoesNotExistException extends RuntimeException{
+public class UserDoesNotExistException extends RuntimeException {
 }

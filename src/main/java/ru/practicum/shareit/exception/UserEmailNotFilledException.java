@@ -1,4 +1,6 @@
 package ru.practicum.shareit.exception;
 
-public class UserEmailNotFilledException extends ValidationException{
+import javax.validation.ValidationException;
+
+public class UserEmailNotFilledException extends ValidationException {
 }

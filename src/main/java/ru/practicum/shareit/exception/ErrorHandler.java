@@ -5,9 +5,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.user.UserController;
 
-@RestControllerAdvice(assignableTypes = {UserController.class})
+@RestControllerAdvice(assignableTypes = {UserController.class, ItemController.class})
 public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -18,8 +19,9 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler({ValidationException.class, UserEmailNotFilledException.class,
-            MethodArgumentNotValidException.class})
+    @ExceptionHandler({ValidationException.class, UserEmailNotFilledException.class
+            , MethodArgumentNotValidException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException ex) {
 
@@ -28,10 +30,10 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserAlreadyExistsException(final UserDoesNotExistException e) {
+    public ErrorResponse handleUserDoesNotExistException(final UserDoesNotExistException ex) {
         return new ErrorResponse(
                 String.format("Пользователь с данным id не существует \"%s\".",
-                        e.getLocalizedMessage())
+                        ex.getLocalizedMessage())
         );
     }
 
