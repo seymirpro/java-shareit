@@ -23,7 +23,7 @@ public class ItemDAOImpl implements ItemDAO {
     @Override
     public Item updateItem(Item item) {
         Item itemOld = getItemByID(item.getId());
-        items.remove(itemOld);
+        items.remove(itemOld.getId());
         items.put(item.getId(), item);
         return item;
     }
