@@ -12,7 +12,7 @@ import ru.practicum.shareit.user.model.User;
 @Data
 @Builder
 public class Item {
-    private int id;
+    private Integer id;
     private String name;
     private String description;
     private Boolean available;
