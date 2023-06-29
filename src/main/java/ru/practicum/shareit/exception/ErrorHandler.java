@@ -38,7 +38,7 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneralExceptions(final RuntimeException ex) {
         return new ErrorResponse(

@@ -10,7 +10,7 @@ public interface UserDAO {
 
     List<User> getUsers();
 
-    User getUserByEmail(User user);
+    boolean isDuplicateEmail(User user);
 
     User updateUser(User user);
 
