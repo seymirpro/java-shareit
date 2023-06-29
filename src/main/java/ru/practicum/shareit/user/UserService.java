@@ -7,6 +7,8 @@ import ru.practicum.shareit.exception.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.UserDoesNotExistException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -21,7 +23,8 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User createUser(User user) {
+    public UserDto createUser(UserDto userDto) {
+        User user = UserMapper.toUser(userDto);
         if (userDAO.getUserByEmail(user) != null) {
             throw new UserAlreadyExistsException();
         }
@@ -30,42 +33,42 @@ public class UserService {
             throw new ValidationException();
         }
 
-        return userDAO.createUser(user);
+        return UserMapper.toUserDto(userDAO.createUser(user));
     }
 
-    public List<User> getUsers() {
-        return userDAO.getUsers();
+    public List<UserDto> getUsers() {
+        return UserMapper.toUsersDto(userDAO.getUsers());
     }
 
-    public User getUserByID(Long id) {
+    public UserDto getUserByID(Long id) {
+        checkUser(id);
+        User user = userDAO.getUserByID(id);
+        return UserMapper.toUserDto(user);
+    }
+
+    public UserDto updateUser(Long id, UserDto userDto) {
+        User user = UserMapper.toUser(userDto);
+        user.setId(id);
+        checkUser(id);
+        User userActualInfo = userDAO.getUserByID(id);
+        user.setId(userActualInfo.getId());
+        User userInDb = userDAO.getUserByEmail(user);
+        if (userInDb != null && user.getId().longValue() != userInDb.getId().longValue()) {
+            throw new RuntimeException();
+        }
+        userDAO.updateUser(user);
+        return UserMapper.toUserDto(user);
+    }
+
+    public UserDto deleteUserByID(Long id) {
+        checkUser(id);
+        return UserMapper.toUserDto(userDAO.deleteUserByID(id));
+    }
+
+    private void checkUser(Long id) {
         User user = userDAO.getUserByID(id);
         if (user == null) {
             throw new UserDoesNotExistException();
         }
-
-        return user;
-    }
-
-    public User updateUser(Long id, User user) {
-        User userActualInfo = userDAO.getUserByID(id);
-        if (userActualInfo == null) {
-            throw new UserDoesNotExistException();
-        } else {
-            user.setId(userActualInfo.getId());
-            User userInDb = userDAO.getUserByEmail(user);
-            if (userInDb != null && user.getId().longValue() != userInDb.getId().longValue()) {
-                throw new RuntimeException();
-            }
-            userDAO.updateUser(user);
-        }
-        return user;
-    }
-
-    public User deleteUserByID(Long id) {
-        User user = getUserByID(id);
-        if (user == null) {
-            throw new UserDoesNotExistException();
-        }
-        return userDAO.deleteUserByID(id);
     }
 }

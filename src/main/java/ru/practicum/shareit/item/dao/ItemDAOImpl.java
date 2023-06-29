@@ -3,20 +3,18 @@ package ru.practicum.shareit.item.dao;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class ItemDAOImpl implements ItemDAO {
     private static int id = 0;
-    private List<Item> items = new ArrayList<>();
+    private Map<Integer, Item> items = new HashMap<>();
 
     @Override
     public Item createItem(Item item) {
         item.setId(++id);
-        items.add(item);
+        items.put(id, item);
         return item;
     }
 
@@ -24,21 +22,20 @@ public class ItemDAOImpl implements ItemDAO {
     public Item updateItem(Item item) {
         Item itemOld = getItemByID(item.getId());
         items.remove(itemOld);
-        items.add(item);
+        items.put(item.getId(), item);
         return item;
     }
 
     @Override
     public Item getItemByID(Integer id) {
-        Optional<Item> item = items.stream()
-                .filter(u -> u.getId() == id)
-                .findFirst();
-        return item.orElseGet(() -> null);
+        return items.get(id);
     }
 
     @Override
     public List<Item> getAllUserItems(Long id) {
-        List<Item> userItems = items.stream()
+        List<Item> userItems = items
+                .values()
+                .stream()
                 .filter(i ->
                         i.getOwner().getId().longValue() == id.longValue())
                 .collect(Collectors.toList());
@@ -52,6 +49,7 @@ public class ItemDAOImpl implements ItemDAO {
         }
 
         List<Item> itemsFound = items
+                .values()
                 .stream()
                 .filter(i -> i.getAvailable() &&
                         (i.getName().toLowerCase().contains(text.toLowerCase())

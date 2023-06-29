@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.model.User;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -28,37 +26,26 @@ public class UserController {
 
     @PostMapping
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        userService.createUser(user);
-        UserDto userDtoUPD = UserMapper.toUserDto(user);
-        return userDtoUPD;
+        return userService.createUser(userDto);
     }
 
     @GetMapping
     public List<UserDto> getUsers() {
-        List<User> users = userService.getUsers();
-        return UserMapper.toUsersDto(users);
+        return userService.getUsers();
     }
 
     @PatchMapping("/{id}")
     public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        user.setId(id);
-        User userUpdated = userService.updateUser(id, user);
-        return UserMapper.toUserDto(userUpdated);
+        return userService.updateUser(id, userDto);
     }
 
     @GetMapping("/{id}")
     public UserDto getUserByID(@PathVariable Long id) {
-        User user = userService.getUserByID(id);
-        UserDto userDto = UserMapper.toUserDto(user);
-        return userDto;
+        return userService.getUserByID(id);
     }
 
     @DeleteMapping("/{id}")
     public UserDto deleteUserByID(@PathVariable Long id) {
-        User user = userService.deleteUserByID(id);
-        UserDto userDto = UserMapper.toUserDto(user);
-        return userDto;
+        return userService.deleteUserByID(id);
     }
 }
