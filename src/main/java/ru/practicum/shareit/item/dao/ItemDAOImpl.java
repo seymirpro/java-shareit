@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ItemDAOImpl implements ItemDAO {
-    private static int id = 0;
+    private static Integer id = 0;
     private Map<Integer, Item> items = new HashMap<>();
 
     @Override
