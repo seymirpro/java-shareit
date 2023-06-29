@@ -7,6 +7,8 @@ import ru.practicum.shareit.exception.ItemDoesNotExistException;
 import ru.practicum.shareit.exception.NotItemOwnerException;
 import ru.practicum.shareit.exception.UserDoesNotExistException;
 import ru.practicum.shareit.item.dao.ItemDAO;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dao.UserDAO;
 import ru.practicum.shareit.user.model.User;
@@ -26,30 +28,26 @@ public class ItemService {
         this.userDao = userDao;
     }
 
-    public Item createItem(Long id, Item item) {
-        User user = userDao.getUserByID(id);
-        if (id == null || user == null) {
-            throw new UserDoesNotExistException();
-        }
+    public ItemDto createItem(Long id, ItemDto itemDto) {
+        Item item = ItemMapper.toItem(itemDto);
+        checkUser(id);
 
+        User user = userDao.getUserByID(id);
         item.setOwner(user);
-        return itemDao.createItem(item);
+        return ItemMapper.toItemDto(itemDao.createItem(item));
     }
 
-    public Item updateItem(Long id, Item item) {
-        User user = userDao.getUserByID(id);
-
-        if (id == null || user == null) {
-            throw new UserDoesNotExistException();
-        }
-
+    public ItemDto updateItem(Long userId, Integer itemId, ItemDto itemDto) {
+        checkUser(userId);
+        User user = userDao.getUserByID(userId);
+        Item item = ItemMapper.toItem(itemDto);
+        item.setId(itemId);
         item.setOwner(user);
 
         Item itemUpd = getItemByID(item.getId());
         if (itemUpd == null) {
             throw new ItemDoesNotExistException();
         }
-
 
         if (itemUpd.getOwner().getId().longValue() != item.getOwner().getId().longValue()) {
             throw new NotItemOwnerException();
@@ -59,54 +57,44 @@ public class ItemService {
             itemUpd.setAvailable(item.getAvailable());
         }
 
-
-
         if (item.getName() != null && !item.getName().equals(itemUpd.getName())) {
             itemUpd.setName(item.getName());
         }
-
 
         if (item.getDescription() != null &&
                 !item.getDescription().equals(itemUpd.getDescription())) {
             itemUpd.setDescription(item.getDescription());
         }
 
-
-
-        return itemDao.updateItem(itemUpd);
+        return ItemMapper.toItemDto(itemDao.updateItem(itemUpd));
     }
 
     public Item getItemByID(Integer id) {
         return itemDao.getItemByID(id);
     }
 
-    public Item getItemByID(Long userId, Integer id) {
-        User user = userDao.getUserByID(userId);
-
-        if (id == null || user == null) {
-            throw new UserDoesNotExistException();
-        }
-
-        return itemDao.getItemByID(id);
+    public ItemDto getItemByID(Long userId, Integer id) {
+        checkUser(userId);
+        return ItemMapper.toItemDto(itemDao.getItemByID(id));
     }
 
-    public List<Item> getAllUserItems(Long id) {
-        User user = userDao.getUserByID(id);
-
-        if (id == null || user == null) {
-            throw new UserDoesNotExistException();
-        }
-
+    public List<ItemDto> getAllUserItems(Long id) {
+        checkUser(id);
         List<Item> userItems = itemDao.getAllUserItems(id);
-        return userItems;
+        List<ItemDto> itemDtos = ItemMapper.toItemDtoList(userItems);
+        return itemDtos;
     }
 
-    public List<Item> getItemsBySearchKeywords(Long id, String searchText) {
+    public List<ItemDto> getItemsBySearchKeywords(Long id, String searchText) {
+        checkUser(id);
+        return ItemMapper.toItemDtoList(itemDao.getItemsBySearchKeywords(searchText));
+    }
+
+    private void checkUser(Long id) {
         User user = userDao.getUserByID(id);
 
         if (id == null || user == null) {
             throw new UserDoesNotExistException();
         }
-        return itemDao.getItemsBySearchKeywords(searchText);
     }
 }
