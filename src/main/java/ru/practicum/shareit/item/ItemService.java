@@ -1,55 +1,55 @@
 package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ItemDoesNotExistException;
 import ru.practicum.shareit.exception.NotItemOwnerException;
 import ru.practicum.shareit.exception.UserDoesNotExistException;
-import ru.practicum.shareit.item.dao.ItemDAO;
+import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-@Service
+//@Service
 @Slf4j
 public class ItemService {
 
-    private ItemDAO itemDao;
-    private UserDAO userDao;
+    private ItemRepository itemRepository;
+    private UserRepository userRepository;
 
-    @Autowired
-    public ItemService(ItemDAO itemDao, UserDAO userDao) {
-        this.itemDao = itemDao;
-        this.userDao = userDao;
+    //@Autowired
+    public ItemService(ItemRepository itemRepository, UserRepository userRepository) {
+        this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
     }
 
     public ItemDto createItem(Long id, ItemDto itemDto) {
         Item item = ItemMapper.toItem(itemDto);
         checkUser(id);
 
-        User user = userDao.getUserByID(id);
+        User user = userRepository.findById(id).get();
         item.setOwner(user);
-        return ItemMapper.toItemDto(itemDao.createItem(item));
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     public ItemDto updateItem(Long userId, Integer itemId, ItemDto itemDto) {
         checkUser(userId);
-        User user = userDao.getUserByID(userId);
+        Optional<User> user = userRepository.findById(userId);
         Item item = ItemMapper.toItem(itemDto);
-        item.setId(itemId);
-        item.setOwner(user);
+        item.setId(Long.valueOf(itemId));
+        item.setOwner(user.orElseGet(null));
 
-        Item itemUpd = getItemByID(item.getId());
+        Item itemUpd = itemRepository.findById(item.getId()).get();
         if (itemUpd == null) {
             throw new ItemDoesNotExistException();
         }
 
-        if (itemUpd.getOwner().getId().longValue() != item.getOwner().getId().longValue()) {
+        if (itemUpd.getOwner().getId() != item.getOwner().getId()) {
             throw new NotItemOwnerException();
         }
 
@@ -66,32 +66,29 @@ public class ItemService {
             itemUpd.setDescription(item.getDescription());
         }
 
-        return ItemMapper.toItemDto(itemDao.updateItem(itemUpd));
-    }
-
-    public Item getItemByID(Integer id) {
-        return itemDao.getItemByID(id);
+        return ItemMapper.toItemDto(itemRepository.save(itemUpd));
     }
 
     public ItemDto getItemByID(Long userId, Integer id) {
         checkUser(userId);
-        return ItemMapper.toItemDto(itemDao.getItemByID(id));
+        return ItemMapper.toItemDto(itemRepository.findById(Long.valueOf(id)).orElseGet(null));
     }
 
     public List<ItemDto> getAllUserItems(Long id) {
         checkUser(id);
-        List<Item> userItems = itemDao.getAllUserItems(id);
+        List<Item> userItems = itemRepository.findAllById(Collections.singleton(id));
         List<ItemDto> itemDtos = ItemMapper.toItemDtoList(userItems);
         return itemDtos;
     }
 
     public List<ItemDto> getItemsBySearchKeywords(Long id, String searchText) {
         checkUser(id);
-        return ItemMapper.toItemDtoList(itemDao.getItemsBySearchKeywords(searchText));
+        //return ItemMapper.toItemDtoList(itemRepository.getItemsBySearchKeywords(searchText));
+        return null;
     }
 
     private void checkUser(Long id) {
-        User user = userDao.getUserByID(id);
+        User user = userRepository.findById(id).orElseGet(null);
 
         if (id == null || user == null) {
             throw new UserDoesNotExistException();

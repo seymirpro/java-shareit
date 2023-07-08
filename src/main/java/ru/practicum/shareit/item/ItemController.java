@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * TODO Sprint add-controllers.
  */
-@RestController
-@RequestMapping("/items")
+//@RestController
+//@RequestMapping("/items")
 @Slf4j
 @Validated
 public class ItemController {
     private ItemService itemService;
 
-    @Autowired
+    //@Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }

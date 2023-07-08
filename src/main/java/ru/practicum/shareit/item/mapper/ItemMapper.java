@@ -19,7 +19,7 @@ public class ItemMapper {
 
     public static ItemDto toItemDto(Item itemUPD) {
         ItemDto itemDto = ItemDto.builder()
-                .id(itemUPD.getId())
+                .id(Math.toIntExact(itemUPD.getId()))
                 .name(itemUPD.getName())
                 .description(itemUPD.getDescription())
                 .available(itemUPD.getAvailable())
