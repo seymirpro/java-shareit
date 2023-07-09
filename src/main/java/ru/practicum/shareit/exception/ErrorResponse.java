@@ -37,7 +37,6 @@ public class ErrorResponse {
 
     public ErrorResponse(HttpStatus httpStatus, String message) {
         this();
-
         this.code = httpStatus.value();
         this.status = httpStatus.name();
         this.message = message;

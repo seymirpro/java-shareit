@@ -23,12 +23,12 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private long id;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "available")
+    @Column(name = "available", nullable = false)
     private Boolean available;
     @ManyToOne
     @JoinColumn(name = "owner_id")

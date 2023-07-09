@@ -24,8 +24,21 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto userDto) {
+        /*Optional<User> existingUser = userRepository.findByEmail(userDto.getEmail());
+        if (existingUser.isPresent()){
+            throw new UserAlreadyExistsException(String.format("Пользователь с " +
+                    "%s уже зарегистрирован", userDto.getEmail()));
+        }
+
         User newUser = userRepository.save(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(newUser);
+        return UserMapper.toUserDto(newUser);*/
+        try {
+            User newUser = userRepository.save(UserMapper.toUser(userDto));
+            return UserMapper.toUserDto(newUser);
+        } catch (RuntimeException ex) {
+            throw new DuplicateEmailException(String.format("Почта %s  уже используется.",
+                    userDto.getEmail()));
+        }
     }
 
     public List<UserDto> getUsers() {
@@ -45,13 +58,17 @@ public class UserService {
         }
 
         if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
+            Optional<User> existingUser = userRepository.findByEmail(userDto.getEmail());
+            if (existingUser.isPresent() && existingUser.get().getId() != user.getId()) {
+                throw new DuplicateEmailException("Почта уже используется");
+            }
             user.setEmail(userDto.getEmail());
         }
 
         return UserMapper.toUserDto(userRepository.save(user));
     }
 
-    public UserDto deleteUserByID(Long id) {
+    public UserDto deleteUserByID(long id) {
         User user = userRepository.findById(id).orElseThrow(
                 UserDoesNotExistException::new
         );
