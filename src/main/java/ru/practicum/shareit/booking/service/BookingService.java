@@ -92,17 +92,17 @@ public class BookingService {
     public BookingGetDto getBookingByBookerAndByBookingId(long userId, long bookingId) {
         User user = getUserByIdIfExistsOrThrowException(userId);
         Booking booking = getBookingByIdIfExistsOrThrowException(bookingId);
-        Booking booking_ = null;
+        Booking bookingRes = null;
         if (booking.getItem().getOwner().getId() != userId) {
-            booking_ = bookingRepository.findByBookerIdAndBookingId(userId, bookingId);
+            bookingRes = bookingRepository.findByBookerIdAndBookingId(userId, bookingId);
         } else {
-            booking_ = bookingRepository.findByItemOwnerIdAndBookingId(userId, bookingId);
+            bookingRes = bookingRepository.findByItemOwnerIdAndBookingId(userId, bookingId);
         }
 
-        if (booking_ == null) {
+        if (bookingRes == null) {
             throw new BookingDoesNotExistException();
         }
-        return BookingMapper.fromBookingToBookingGetDto(booking_);
+        return BookingMapper.fromBookingToBookingGetDto(bookingRes);
     }
 
     private User getUserByIdIfExistsOrThrowException(Long userId) {
