@@ -3,8 +3,8 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.DuplicateEmailException;
-import ru.practicum.shareit.exception.UserDoesNotExistException;
+import ru.practicum.shareit.exception.user.DuplicateEmailException;
+import ru.practicum.shareit.exception.user.UserDoesNotExistException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -24,14 +24,6 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto userDto) {
-        /*Optional<User> existingUser = userRepository.findByEmail(userDto.getEmail());
-        if (existingUser.isPresent()){
-            throw new UserAlreadyExistsException(String.format("Пользователь с " +
-                    "%s уже зарегистрирован", userDto.getEmail()));
-        }
-
-        User newUser = userRepository.save(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(newUser);*/
         try {
             User newUser = userRepository.save(UserMapper.toUser(userDto));
             return UserMapper.toUserDto(newUser);

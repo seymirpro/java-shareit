@@ -1,10 +1,13 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -13,11 +16,31 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+@Entity
+@Table(name = "bookings")
 public class Booking {
-    private final int id;
-    private final LocalDateTime start;
-    private final LocalDateTime end;
-    private final Item item;
-    private final User booker;
-    private final String status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "start_dt")
+    private LocalDateTime start;
+    @Column(name = "end_dt")
+    private LocalDateTime end;
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+    @ManyToOne
+    @JoinColumn(name = "booker_id")
+    private User booker;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public Booking(long id, Item item, User booker, Status status) {
+        this.id = id;
+        this.item = item;
+        this.booker = booker;
+        this.status = status;
+    }
 }
