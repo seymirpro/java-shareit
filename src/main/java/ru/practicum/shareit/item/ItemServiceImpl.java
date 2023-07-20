@@ -111,12 +111,6 @@ public class ItemServiceImpl {
         }
 
         ItemOwnerDto itemOwnerDto = ItemMapper.itemOwnerDto(item, bookingLast, bookingNext);
-        itemOwnerDto.getComments().stream().forEach(
-                commentGetDto -> {
-                    User commentUser = userRepository.findById(commentGetDto.getAuthorId()).get();
-                    commentGetDto.setAuthorName(commentUser.getName());
-                }
-        );
         return itemOwnerDto;
     }
 
