@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.mapper;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.dto.BookingCreateUpdateDto;
 import ru.practicum.shareit.booking.dto.BookingGetDto;
 import ru.practicum.shareit.booking.dto.BookingOwnerGetDto;

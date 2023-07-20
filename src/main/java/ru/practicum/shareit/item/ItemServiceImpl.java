@@ -3,9 +3,9 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dao.BookingRepository;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.comment.CommentBadRequestException;
 import ru.practicum.shareit.exception.item.ItemDoesNotExistException;
 import ru.practicum.shareit.exception.item.NotItemOwnerException;
@@ -25,6 +25,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,8 +50,6 @@ public class ItemServiceImpl {
     }
 
     public ItemDto createItem(long id, ItemDto itemDto) {
-        log.debug(itemDto.toString());
-        System.out.printf(itemDto.toString());
         Item item = ItemMapper.toItem(itemDto);
         User user = userRepository.findById(id).orElseThrow(UserDoesNotExistException::new);
         item.setOwner(user);
@@ -97,14 +96,18 @@ public class ItemServiceImpl {
 
         if (item.getOwner().getId() == userId) {
             List<Booking> bookingNextList = bookingRepository.findNextBookingByItemOwnerId(userId, itemId);
-            if (bookingNextList.size() > 0) {
-                bookingNext = bookingNextList.get(0);
+
+            Optional<Booking> next = bookingNextList.stream().findFirst();
+            if (next.isPresent()) {
+                bookingNext = next.get();
             }
 
             List<Booking> bookingLastList = bookingRepository.findLastBookingByItemOwnerId(userId, itemId);
-            if (bookingLastList.size() > 0) {
-                bookingLast = bookingLastList.get(0);
+            Optional<Booking> last = bookingLastList.stream().findFirst();
+            if (last.isPresent()) {
+                bookingLast = last.get();
             }
+
         }
 
         ItemOwnerDto itemOwnerDto = ItemMapper.itemOwnerDto(item, bookingLast, bookingNext);

@@ -1,8 +1,9 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingCreateUpdateDto;

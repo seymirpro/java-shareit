@@ -10,9 +10,6 @@ import ru.practicum.shareit.user.dto.UserDtoGetId;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @Builder
 @AllArgsConstructor
