@@ -17,7 +17,8 @@ import java.util.List;
 @Table(name = "items")
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@Getter @Setter
+@Getter
+@Setter
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
