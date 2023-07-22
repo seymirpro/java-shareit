@@ -32,7 +32,6 @@ public class ItemMapper {
                 .available(itemUPD.getAvailable())
                 .itemRequest(itemUPD.getRequest() != null ?
                         itemUPD.getRequest() : null)
-                //.comments(itemUPD.getComments().stream().map(comment -> CommentMapper.toCommentGetDto(comment)).collect(Collectors.toList()))
                 .build();
         return itemDto;
     }

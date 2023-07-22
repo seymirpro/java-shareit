@@ -24,8 +24,7 @@ import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,19 +115,18 @@ public class ItemServiceImpl {
 
     public List<ItemOwnerDto> getAllUserItems(Long ownerId) {
         List<Item> userItems = itemRepository.findByOwnerId(ownerId);
+        List<Booking> itemBookings = bookingRepository.findBookingsByItemOwnerId(ownerId);
+        Map<Item, List<Booking>> bookingsMap = itemBookings.stream()
+                .collect(Collectors.groupingBy(Booking::getItem));
 
-        List<ItemOwnerDto> itemOwnerDtos = userItems.stream()
-                .map(i -> {
-                    List<Booking> bookingLastList = bookingRepository.findLastBookingByItemOwnerId(ownerId, i.getId());
-                    List<Booking> bookingNextList = bookingRepository.findNextBookingByItemOwnerId(ownerId, i.getId());
-                    ItemOwnerDto itemOwnerDto = ItemMapper.itemOwnerDto(i,
-                            bookingLastList.size() > 0 ? bookingLastList.get(0) : null,
-                            bookingNextList.size() > 0 ? bookingNextList.get(0) : null
-
-                    );
-                    return itemOwnerDto;
-                }).collect(Collectors.toList());
-        return itemOwnerDtos;
+        return userItems.stream().map(item -> {
+            List<Booking> bookingsSublist = bookingsMap.getOrDefault(item, Collections.emptyList());
+            Optional<Booking> nextBooking = getNextBookingItem(bookingsSublist);
+            Optional<Booking> lastBooking = getLastBookingItem(bookingsSublist);
+            ItemOwnerDto itemOwnerDto = ItemMapper.itemOwnerDto(item, lastBooking.orElse(null),
+                    nextBooking.orElse(null));
+            return itemOwnerDto;
+        }).collect(Collectors.toList());
     }
 
     public List<ItemDto> getItemsBySearchKeywords(String searchText) {
@@ -156,5 +154,20 @@ public class ItemServiceImpl {
         CommentGetDto commentGetDto = CommentMapper.toCommentGetDto(commentInserted);
         commentGetDto.setAuthorName(author.getName());
         return commentGetDto;
+    }
+
+    private Optional<Booking> getNextBookingItem(List<Booking> bookings) {
+        LocalDateTime currentDt = LocalDateTime.now();
+        return bookings.stream()
+                .filter(b -> b.getStart().isAfter(currentDt) && b.getStatus().equals(Status.APPROVED))
+                .sorted(Comparator.comparing(Booking::getStart))
+                .findFirst();
+    }
+
+    private Optional<Booking> getLastBookingItem(List<Booking> bookings) {
+        LocalDateTime currentDt = LocalDateTime.now();
+        return bookings.stream()
+                .filter(b -> b.getStart().isBefore(currentDt) && b.getStatus().equals(Status.APPROVED))
+                .sorted(Comparator.comparing(Booking::getStart).reversed()).findFirst();
     }
 }
