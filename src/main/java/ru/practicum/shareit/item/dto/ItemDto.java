@@ -2,7 +2,9 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.utils.Create;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,13 +15,14 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
+@Validated
 public class ItemDto {
-    private Integer id;
-    @NotEmpty
+    private long id;
+    @NotEmpty(groups = {Create.class})
     private String name;
-    @NotEmpty
+    @NotEmpty(groups = {Create.class})
     private String description;
-    @NotNull
+    @NotNull(groups = {Create.class})
     private Boolean available;
     private ItemRequest itemRequest;
 }
