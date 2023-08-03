@@ -30,11 +30,12 @@ public class Item {
     private String description;
     @Column(name = "available", nullable = false)
     private Boolean available;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
-    @Transient
-    private final ItemRequest request;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private ItemRequest request;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     private List<Comment> comments;

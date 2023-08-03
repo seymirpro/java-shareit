@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.dao;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.Status;
@@ -23,54 +24,54 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "FROM Booking b JOIN b.item JOIN b.booker " +
             "WHERE b.item.owner.id=:itemOwnerId " +
             "ORDER BY b.end DESC")
-    List<Booking> findAllByItemOwnerId(long itemOwnerId);
+    List<Booking> findAllByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     @Query("SELECT b  " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.item.owner.id=:itemOwnerId " +
             "AND b.end > CURRENT_TIMESTAMP() " +
             "ORDER BY b.end DESC")
-    List<Booking> findFutureBookingsByItemOwnerId(long itemOwnerId);
+    List<Booking> findFutureBookingsByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE b.booker.id=:bookerId " +
             "ORDER BY b.start DESC")
-    List<Booking> findAllByBookerId(long bookerId);
+    List<Booking> findAllByBookerId(long bookerId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
             "AND CURRENT_TIMESTAMP() BETWEEN b.start AND b.end " +
             "ORDER BY b.start ASC")
-    List<Booking> findCurrentBookingsByBookerId(Long userId);
+    List<Booking> findCurrentBookingsByBookerId(Long userId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
             "AND b.end < CURRENT_TIMESTAMP()" +
             "ORDER BY b.start DESC")
-    List<Booking> findPastBookingsByBookerId(Long userId);
+    List<Booking> findPastBookingsByBookerId(Long userId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
             "AND b.status='WAITING'" +
             "ORDER BY b.start DESC")
-    List<Booking> findWaitingBookingsByBookerId(Long userId);
+    List<Booking> findWaitingBookingsByBookerId(Long userId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
             "AND b.status='REJECTED'" +
             "ORDER BY b.start DESC")
-    List<Booking> findRejectedBookingsByBookerId(Long userId);
+    List<Booking> findRejectedBookingsByBookerId(Long userId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
             "AND CURRENT_TIMESTAMP() < b.end  " +
             "ORDER BY b.end DESC")
-    List<Booking> findFutureBookingsByBookerId(Long userId);
+    List<Booking> findFutureBookingsByBookerId(Long userId, Pageable pageable);
 
     @Query("SELECT b FROM Booking b JOIN b.item JOIN b.booker " +
             "WHERE 1=1 " +
@@ -94,13 +95,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE 1=1 " +
             "AND b.item.owner.id=:itemOwnerId " +
             "AND b.status='REJECTED'")
-    List<Booking> findRejectedBookingsByItemOwnerId(long itemOwnerId);
+    List<Booking> findRejectedBookingsByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     @Query("SELECT b FROM Booking b JOIN b.item JOIN b.booker " +
             "WHERE 1=1 " +
             "AND b.item.owner.id=:itemOwnerId " +
             "AND b.status='WAITING'")
-    List<Booking> findWaitingBookingsByItemOwnerId(long itemOwnerId);
+    List<Booking> findWaitingBookingsByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     List<Booking> findBookingByItemIdAndStatusNotInAndStartBefore(long itemId, List<Status> rejected, LocalDateTime now);
 
@@ -109,14 +110,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.item.owner.id=:itemOwnerId " +
             "AND CURRENT_TIMESTAMP() BETWEEN b.start AND b.end " +
             "ORDER BY b.start ASC")
-    List<Booking> findCurrentBookingsByItemOwnerId(long itemOwnerId);
+    List<Booking> findCurrentBookingsByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.item.owner.id=:itemOwnerId " +
             "AND b.end < CURRENT_TIMESTAMP()" +
             "ORDER BY b.start DESC")
-    List<Booking> findPastBookingsByItemOwnerId(long itemOwnerId);
+    List<Booking> findPastBookingsByItemOwnerId(long itemOwnerId, Pageable pageable);
 
     @Query("SELECT b FROM Booking b WHERE b.item.owner.id=:ownerId")
     List<Booking> findBookingsByItemOwnerId(Long ownerId);

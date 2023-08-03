@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
+import ru.practicum.shareit.item.dto.ItemAsRequestAnswerGetDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
@@ -26,12 +27,11 @@ public class ItemMapper {
 
     public ItemDto toItemDto(Item itemUPD) {
         ItemDto itemDto = ItemDto.builder()
-                .id(Math.toIntExact(itemUPD.getId()))
+                .id(itemUPD.getId())
                 .name(itemUPD.getName())
                 .description(itemUPD.getDescription())
                 .available(itemUPD.getAvailable())
-                .itemRequest(itemUPD.getRequest() != null ?
-                        itemUPD.getRequest() : null)
+                .requestId(itemUPD.getRequest() == null ? null : itemUPD.getRequest().getId())
                 .build();
         return itemDto;
     }
@@ -50,6 +50,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .requestId(item.getRequest() == null ? null : item.getRequest().getId())
                 .nextBooking(nextBooking == null ? null : BookingMapper.fromBookingToBookingGetOwnerDto(nextBooking))
                 .lastBooking(lastBooking == null ? null : BookingMapper.fromBookingToBookingGetOwnerDto(lastBooking))
                 .comments(item.getComments().stream()
@@ -61,5 +62,20 @@ public class ItemMapper {
             itemOwnerDto.setComments(new ArrayList<>());
         }
         return itemOwnerDto;
+    }
+
+    public ItemAsRequestAnswerGetDto itemToItemAsRequestAnswerGetDto(Item item) {
+        return ItemAsRequestAnswerGetDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequest() == null ? null : item.getRequest().getId())
+                .build();
+    }
+
+    public List<ItemAsRequestAnswerGetDto> itemToItemAsRequestAnswerGetDtoList(List<Item> items) {
+        return items.stream().map(i -> itemToItemAsRequestAnswerGetDto(i))
+                .collect(Collectors.toList());
     }
 }
