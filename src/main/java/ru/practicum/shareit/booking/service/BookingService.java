@@ -118,7 +118,7 @@ public class BookingService {
     public List<BookingGetDto> getAllBookings(Long userId, String state, int from, int size) {
         User user = getUserByIdIfExistsOrThrowException(userId);
         List<Booking> res = null;
-        Pageable pageable = PageRequest.of(from, size); //, Sort.by("start").ascending()
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : from, size);
         switch (state) {
             case "ALL":
                 res = bookingRepository.findAllByBookerId(userId, pageable);
@@ -147,7 +147,8 @@ public class BookingService {
 
     public List<BookingGetDto> getAllBookingsForItemOwner(long itemOwnerId, String state, int from, int size) {
         User user = getUserByIdIfExistsOrThrowException(itemOwnerId);
-        Pageable pageable = PageRequest.of(from, size); //, Sort.by("start").ascending()
+
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : from, size);
         List<Booking> bookings = null;
         switch (state) {
             case "ALL":
