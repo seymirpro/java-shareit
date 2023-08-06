@@ -70,7 +70,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .requestId(item == null || item.getRequest() == null ? null : item.getRequest().getId())
+                .requestId(item != null && item.getRequest() != null ? item.getRequest().getId() : null)
                 .build();
     }
 
