@@ -8,9 +8,6 @@ import ru.practicum.shareit.utils.Create;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-/**
- * TODO Sprint add-controllers.
- */
 
 @Data
 @Builder
