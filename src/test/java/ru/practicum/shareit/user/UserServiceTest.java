@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.hibernate.mapping.Collection;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,17 +9,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
 import ru.practicum.shareit.exception.user.DuplicateEmailException;
-import ru.practicum.shareit.exception.user.UserAlreadyExistsException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
-import java.awt.print.Pageable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +53,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetAllUsers(){
+    void testGetAllUsers() {
         User user1 = generator.nextObject(User.class);
         User user2 = generator.nextObject(User.class);
         List<User> users = List.of(user1, user2);
@@ -72,7 +66,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionIfUserWithAlreadyExistedEmailAdded(){
+    void shouldThrowExceptionIfUserWithAlreadyExistedEmailAdded() {
 
         when(userRepository.save(any(User.class)))
                 .thenThrow(new DuplicateEmailException("Email already used"));
@@ -84,7 +78,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserByID(){
+    void testGetUserByID() {
         User user = generator.nextObject(User.class);
         when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user));
@@ -94,11 +88,11 @@ class UserServiceTest {
         assertEquals(user.getEmail(), userInDb.getEmail());
     }
 
-    void testUpdateUser(){
+    void testUpdateUser() {
 
     }
 
-    void testDeleteUserByID(){
+    void testDeleteUserByID() {
 
     }
 

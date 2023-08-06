@@ -8,7 +8,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 class UserRepositoryTest {

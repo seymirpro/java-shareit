@@ -10,7 +10,6 @@ import org.springframework.boot.test.json.ObjectContent;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JsonTest
 class UserDtoGetIdTest {
@@ -32,7 +31,7 @@ class UserDtoGetIdTest {
         String content = "{\"id\": \"1\"}";
         ObjectContent<UserDtoGetId> userDtoGetIdObjectContent = json.parse(content);
         assertThat(userDtoGetIdObjectContent).isEqualTo(UserDtoGetId.builder()
-                        .id(1L)
+                .id(1L)
                 .build());
     }
 }

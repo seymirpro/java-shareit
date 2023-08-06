@@ -39,9 +39,9 @@ class UserDtoTest {
         String content = "{\"id\": 1,\"name\":\"user\",\"email\":\"user@mail.ru\"}";
         ObjectContent<UserDto> result = json.parse(content);
         assertThat(result).isEqualTo(UserDto.builder()
-                        .id(1L)
-                        .name("user")
-                        .email("user@mail.ru")
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
                 .build());
     }
 }
