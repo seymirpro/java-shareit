@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.mapper;
 
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserDtoGetId;
 import ru.practicum.shareit.user.model.User;
@@ -10,7 +9,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class UserMapperTest {
