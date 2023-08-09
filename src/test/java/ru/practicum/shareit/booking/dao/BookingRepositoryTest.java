@@ -9,7 +9,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,10 @@ class BookingRepositoryTest {
 
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ItemRepository itemRepository;
     private User owner;
     private User booker;
     private Item item;
@@ -31,8 +37,11 @@ class BookingRepositoryTest {
     @BeforeEach
     void setUp() {
         owner = User.builder().id(1).name("owner").email("owner@mail.ru").build();
+        userRepository.save(owner);
         booker = User.builder().id(2).name("booker").email("booker@mail.ru").build();
+        userRepository.save(booker);
         item = Item.builder().id(1).owner(owner).available(true).description("description").name("item").build();
+        itemRepository.save(item);
         Booking booking = Booking.builder()
                 .id(1)
                 .start(LocalDateTime.of(2023, 8, 1, 15, 32, 9))
