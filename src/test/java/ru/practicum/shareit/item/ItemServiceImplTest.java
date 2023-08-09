@@ -346,4 +346,38 @@ class ItemServiceImplTest {
         assertThrows(CommentBadRequestException.class, () ->
                 itemService.addComment(1L, 2L, commentDto));
     }
+
+    @Test
+    @SneakyThrows
+    void testAddComment() {
+        CommentDto commentDto = CommentDto.builder()
+                .text("comment text")
+                .authorId(1L)
+                .itemId(3L)
+                .build();
+
+        when(itemRepository.findByOwnerIdAndId(anyLong(), anyLong()))
+                .thenAnswer(invocationOnMock -> Item.builder()
+                        .id(1)
+                        .name("item 1")
+                        .description("item 1 description")
+                        .available(true)
+                        .owner(User.builder()
+                                .id(1L)
+                                .name("user")
+                                .email("user@mail.ru")
+                                .build())
+                        .comments(new ArrayList<>())
+                        .build());
+
+        when(bookingRepository.findBookingByItemIdAndStatusNotInAndStartBefore(anyLong(),
+                any(List.class), any(LocalDateTime.class)))
+                .thenAnswer(invocationOnMock -> {
+                    List<Booking> bookings = new ArrayList<>();
+                    return bookings;
+                });
+
+        assertThrows(CommentBadRequestException.class,
+                () -> itemService.addComment(1L, 2L, commentDto));
+    }
 }
