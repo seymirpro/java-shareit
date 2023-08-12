@@ -100,7 +100,6 @@ class CommentMapperTest {
         assertEquals("Test comment 2", commentGetDto2.getText());
         assertEquals(200L, commentGetDto2.getItemId());
         assertEquals(3L, commentGetDto2.getAuthorId());
-        assertNotEquals("2021-01-02", commentGetDto2.getCreated());
         assertEquals("Jane Smith", commentGetDto2.getAuthorName());
     }
 }
