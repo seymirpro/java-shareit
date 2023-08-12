@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
 class ItemOwnerDtoTest {
@@ -35,10 +36,12 @@ class ItemOwnerDtoTest {
     private BookingOwnerGetDto lastBooking;
     private BookingOwnerGetDto nextBooking;
     private List<CommentGetDto> comments;
+    private ItemOwnerDto itemOwnerDtoT;
 
     @BeforeEach
     public void setUp() {
         itemOwnerDto = new ItemOwnerDto(id, name, description, available, requestId, lastBooking, nextBooking, comments);
+        itemOwnerDtoT = ItemOwnerDto.builder().build();
     }
 
     @Test
@@ -109,11 +112,11 @@ class ItemOwnerDtoTest {
                 .comments(List.of())
                 .build();
 
-        Assertions.assertEquals(id, itemOwnerDto.getId());
-        Assertions.assertEquals(name, itemOwnerDto.getName());
-        Assertions.assertEquals(description, itemOwnerDto.getDescription());
-        Assertions.assertEquals(available, itemOwnerDto.getAvailable());
-        Assertions.assertEquals(requestId, itemOwnerDto.getRequestId());
+        assertEquals(id, itemOwnerDto.getId());
+        assertEquals(name, itemOwnerDto.getName());
+        assertEquals(description, itemOwnerDto.getDescription());
+        assertEquals(available, itemOwnerDto.getAvailable());
+        assertEquals(requestId, itemOwnerDto.getRequestId());
         Assertions.assertNotNull(itemOwnerDto.getLastBooking());
         Assertions.assertNotNull(itemOwnerDto.getNextBooking());
         Assertions.assertNotNull(itemOwnerDto.getComments());
@@ -130,13 +133,73 @@ class ItemOwnerDtoTest {
 
         ItemOwnerDto itemOwnerDto = new ItemOwnerDto(id, name, description, available, requestId, comments);
 
-        Assertions.assertEquals(id, itemOwnerDto.getId());
-        Assertions.assertEquals(name, itemOwnerDto.getName());
-        Assertions.assertEquals(description, itemOwnerDto.getDescription());
-        Assertions.assertEquals(available, itemOwnerDto.getAvailable());
-        Assertions.assertEquals(requestId, itemOwnerDto.getRequestId());
+        assertEquals(id, itemOwnerDto.getId());
+        assertEquals(name, itemOwnerDto.getName());
+        assertEquals(description, itemOwnerDto.getDescription());
+        assertEquals(available, itemOwnerDto.getAvailable());
+        assertEquals(requestId, itemOwnerDto.getRequestId());
         Assertions.assertNull(itemOwnerDto.getLastBooking());
         Assertions.assertNull(itemOwnerDto.getNextBooking());
-        Assertions.assertEquals(comments, itemOwnerDto.getComments());
+        assertEquals(comments, itemOwnerDto.getComments());
+    }
+
+    @Test
+    public void testId() {
+        Long id = 1L;
+        itemOwnerDtoT.setId(id);
+        assertEquals(id, itemOwnerDtoT.getId());
+    }
+
+    @Test
+    public void testName() {
+        String name = "Test Item";
+        itemOwnerDtoT.setName(name);
+        assertEquals(name, itemOwnerDtoT.getName());
+    }
+
+    @Test
+    public void testDescription() {
+        String description = "Test Description";
+        itemOwnerDtoT.setDescription(description);
+        assertEquals(description, itemOwnerDtoT.getDescription());
+    }
+
+    @Test
+    public void testAvailable() {
+        Boolean available = true;
+        itemOwnerDtoT.setAvailable(available);
+        assertEquals(available, itemOwnerDtoT.getAvailable());
+    }
+
+    @Test
+    public void testRequestId() {
+        Long requestId = 1L;
+        itemOwnerDtoT.setRequestId(requestId);
+        assertEquals(requestId, itemOwnerDtoT.getRequestId());
+    }
+
+    @Test
+    public void testLastBooking() {
+        BookingOwnerGetDto lastBooking = new BookingOwnerGetDto();
+        itemOwnerDtoT.setLastBooking(lastBooking);
+        assertEquals(lastBooking, itemOwnerDtoT.getLastBooking());
+    }
+
+    @Test
+    public void testNextBooking() {
+        BookingOwnerGetDto nextBooking = new BookingOwnerGetDto();
+        itemOwnerDtoT.setNextBooking(nextBooking);
+        assertEquals(nextBooking, itemOwnerDtoT.getNextBooking());
+    }
+
+    @Test
+    public void testComments() {
+        List<CommentGetDto> comments = new ArrayList<>();
+        CommentGetDto comment1 = CommentGetDto.builder().build();
+        CommentGetDto comment2 = CommentGetDto.builder().build();
+        comments.add(comment1);
+        comments.add(comment2);
+        itemOwnerDtoT.setComments(comments);
+        assertEquals(comments, itemOwnerDtoT.getComments());
     }
 }
