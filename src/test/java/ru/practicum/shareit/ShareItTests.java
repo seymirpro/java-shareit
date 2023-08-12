@@ -11,7 +11,7 @@ class ShareItTests {
 
     @Test
     void contextLoads() {
-        assertThrows(BeanCreationException.class,
+        assertThrows(IllegalStateException.class,
                 () -> ShareItApp.main(new String[]{}));
     }
 
