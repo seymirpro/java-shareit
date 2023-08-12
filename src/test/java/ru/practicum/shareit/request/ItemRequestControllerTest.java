@@ -30,7 +30,7 @@ class ItemRequestControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ItemRequestService itemRequestService;
-    private final String REQ_USER_ID_HEADER = "X-Sharer-User-Id";
+    private static final String REQ_USER_ID_HEADER = "X-Sharer-User-Id";
 
     @Test
     @SneakyThrows
@@ -49,7 +49,7 @@ class ItemRequestControllerTest {
                 .thenReturn(
                         itemRequestGetDto
                 );
-        long userId = 1l;
+        long userId = 1L;
         mockMvc.perform(
                         post("/requests")
                                 .header(REQ_USER_ID_HEADER, userId)
@@ -73,7 +73,7 @@ class ItemRequestControllerTest {
                 .thenReturn(itemRequestGetDtos);
 
         mockMvc.perform(get("/requests")
-                        .header(REQ_USER_ID_HEADER, 1l)
+                        .header(REQ_USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk());
@@ -90,7 +90,7 @@ class ItemRequestControllerTest {
         mockMvc.perform(get("/requests/all")
                         .queryParam("from", String.valueOf(2))
                         .queryParam("size", String.valueOf(3))
-                        .header(REQ_USER_ID_HEADER, 1l)
+                        .header(REQ_USER_ID_HEADER, 1L)
                 )
                 .andExpect(status().isOk());
         verify(itemRequestService, times(1)).getAllRequestsExcludingUser(anyLong(), anyInt(), anyInt());
@@ -107,7 +107,7 @@ class ItemRequestControllerTest {
                 .build();
         when(itemRequestService.getItemRequestByID(anyLong(), anyLong()))
                 .thenReturn(itemRequestGetDto);
-        long requestId = 2l;
+        long requestId = 2L;
         mockMvc.perform(get("/requests/{requestId}", requestId)
                 .header(REQ_USER_ID_HEADER, 2)
         ).andExpect(status().isOk());

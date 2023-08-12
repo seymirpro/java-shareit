@@ -39,7 +39,7 @@ public class BookingControllerTest {
     @MockBean
     private ItemServiceImpl itemService;
 
-    private final String REQ_HEADER_USER_ID = "X-Sharer-User-Id";
+    private static final String REQ_HEADER_USER_ID = "X-Sharer-User-Id";
 
     @SneakyThrows
     @Test
@@ -98,7 +98,7 @@ public class BookingControllerTest {
     @Test
     @SneakyThrows
     void testUpdateBooking() {
-        long bookingId = 1l;
+        long bookingId = 1L;
         long userId = 1L;
         mockMvc.perform(patch("/bookings/{bookingId}", bookingId)
                         .header(REQ_HEADER_USER_ID, String.valueOf(userId)))

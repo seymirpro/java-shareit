@@ -41,6 +41,7 @@ public class ItemOwnerDto {
         this.nextBooking = BookingMapper.fromBookingToBookingGetOwnerDto(nextBooking);
         this.comments = CommentMapper.toCommentGetDtos(comments);
     }
+
     public ItemOwnerDto(Long id, String name, String description,
                         Boolean available, Long requestId,
                         Collection<Comment> comments) {
