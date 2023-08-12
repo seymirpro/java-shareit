@@ -62,7 +62,7 @@ public class ItemServiceImpl {
 
         if (itemDto.getRequestId() != null) {
             ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(
-                    () -> new ItemRequestDoesNotExistException()
+                    ItemRequestDoesNotExistException::new
             );
             item.setRequest(request);
         }

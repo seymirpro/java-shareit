@@ -20,6 +20,8 @@ import ru.practicum.shareit.exception.request.ItemRequestDoesNotExistException;
 import ru.practicum.shareit.exception.user.UserDoesNotExistException;
 import ru.practicum.shareit.item.comment.dao.CommentRepository;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.dto.CommentGetDto;
+import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
@@ -63,6 +65,32 @@ class ItemServiceImplTest {
         Mockito.reset(userRepository);
         itemService = new ItemServiceImpl(itemRepository, userRepository, bookingRepository,
                 commentRepository, itemRequestRepository);
+    }
+
+    @Test
+    @SneakyThrows
+    void testCreateItemShouldThrowExceptionIfItemDoesNotExist() {
+        UserDto userDto1 = UserDto.builder()
+                .id(1L)
+                .name("user 1")
+                .email("user1@mail.ru")
+                .build();
+        ItemRequest itemRequest = ItemRequest.builder()
+                .id(1L)
+                .build();
+        itemRequest.setRequestor(UserMapper.toUser(userDto1));
+        ItemDto itemDto = ItemDto.builder()
+                .id(1)
+                .name("item 1")
+                .description("item 1 description")
+                .available(true)
+                .requestId(itemRequest.getId())
+                .build();
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(UserMapper.toUser(userDto1)));
+        when(itemRequestRepository.findById(anyLong()))
+                .thenThrow(new ItemRequestDoesNotExistException());
+        assertThrows(ItemRequestDoesNotExistException.class, () -> itemService.createItem(1L, itemDto));
     }
 
     @Test
@@ -349,7 +377,7 @@ class ItemServiceImplTest {
 
     @Test
     @SneakyThrows
-    void testAddComment() {
+    void testAddCommentShouldThrowExceptionIfBookingsEmpty() {
         CommentDto commentDto = CommentDto.builder()
                 .text("comment text")
                 .authorId(1L)
@@ -379,5 +407,82 @@ class ItemServiceImplTest {
 
         assertThrows(CommentBadRequestException.class,
                 () -> itemService.addComment(1L, 2L, commentDto));
+    }
+
+    @Test
+    @SneakyThrows
+    void testAddCommentShouldThrowExceptionIfAuthorDoesNotExist() {
+        CommentDto commentDto = CommentDto.builder()
+                .text("comment text")
+                .authorId(1L)
+                .itemId(3L)
+                .build();
+
+        when(itemRepository.findByOwnerIdAndId(anyLong(), anyLong()))
+                .thenAnswer(invocationOnMock -> Item.builder()
+                        .id(1)
+                        .name("item 1")
+                        .description("item 1 description")
+                        .available(true)
+                        .owner(User.builder()
+                                .id(1L)
+                                .name("user")
+                                .email("user@mail.ru")
+                                .build())
+                        .comments(new ArrayList<>())
+                        .build());
+
+        when(bookingRepository.findBookingByItemIdAndStatusNotInAndStartBefore(anyLong(),
+                any(List.class), any(LocalDateTime.class)))
+                .thenAnswer(invocationOnMock -> {
+                    List<Booking> bookings = List.of(Booking.builder().build());
+                    return bookings;
+                });
+
+        when(userRepository.findById(anyLong())).thenThrow(new UserDoesNotExistException());
+        assertThrows(UserDoesNotExistException.class,
+                () -> itemService.addComment(1L, 2L, commentDto));
+    }
+
+    @Test
+    @SneakyThrows
+    void testAddComment() {
+        CommentDto commentDto = CommentDto.builder()
+                .text("comment text")
+                .authorId(1L)
+                .itemId(3L)
+                .build();
+
+        when(itemRepository.findByOwnerIdAndId(anyLong(), anyLong()))
+                .thenAnswer(invocationOnMock -> Item.builder()
+                        .id(1)
+                        .name("item 1")
+                        .description("item 1 description")
+                        .available(true)
+                        .owner(User.builder()
+                                .id(1L)
+                                .name("user")
+                                .email("user@mail.ru")
+                                .build())
+                        .comments(new ArrayList<>())
+                        .build());
+
+        when(bookingRepository.findBookingByItemIdAndStatusNotInAndStartBefore(anyLong(),
+                any(List.class), any(LocalDateTime.class)))
+                .thenAnswer(invocationOnMock -> {
+                    List<Booking> bookings = List.of(Booking.builder().build());
+                    return bookings;
+                });
+
+        User author = User.builder().id(1L).email("user@mail.ru").name("user").build();
+        Comment newComment = Comment.builder().id(1L)
+                .item(Item.builder().build())
+                .author(author)
+                .build();
+        when(userRepository.findById(anyLong())).thenAnswer(invocationOnMock -> Optional.of(author));
+        when(commentRepository.save(any(Comment.class)))
+                .thenAnswer(invocationOnMock -> newComment);
+        CommentGetDto commentGetDto = itemService.addComment(1L, 2L, commentDto);
+        assertNotNull(commentGetDto);
     }
 }
