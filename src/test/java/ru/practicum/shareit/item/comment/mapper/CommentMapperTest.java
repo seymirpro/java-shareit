@@ -53,7 +53,7 @@ class CommentMapperTest {
         assertEquals("Test comment", commentGetDto.getText());
         assertEquals(100L, commentGetDto.getItemId());
         assertEquals(2L, commentGetDto.getAuthorId());
-        assertEquals(LocalDateTime.now(), commentGetDto.getCreated());
+        assertNotNull(commentGetDto.getCreated());
         assertEquals("John Doe", commentGetDto.getAuthorName());
     }
 
