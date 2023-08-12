@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 @Getter
 @Setter
+@ToString
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

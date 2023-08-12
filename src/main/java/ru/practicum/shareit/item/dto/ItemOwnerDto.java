@@ -28,8 +28,8 @@ public class ItemOwnerDto {
     private BookingOwnerGetDto nextBooking;
     private List<CommentGetDto> comments;
 
-    public ItemOwnerDto(long id, String name, String description,
-                        boolean available, long requestId,
+    public ItemOwnerDto(Long id, String name, String description,
+                        boolean available, Long requestId,
                         Booking lastBooking, Booking nextBooking,
                         Collection<Comment> comments) {
         this.id = id;
@@ -41,10 +41,8 @@ public class ItemOwnerDto {
         this.nextBooking = BookingMapper.fromBookingToBookingGetOwnerDto(nextBooking);
         this.comments = CommentMapper.toCommentGetDtos(comments);
     }
-
-
-    public ItemOwnerDto(long id, String name, String description,
-                        Boolean available, long requestId,
+    public ItemOwnerDto(Long id, String name, String description,
+                        Boolean available, Long requestId,
                         Collection<Comment> comments) {
         this.id = id;
         this.name = name;

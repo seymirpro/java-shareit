@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 @Configuration
 public class BeanConfig {
+    private Server inMemoryH2DatabaseServer;
     @Bean(initMethod = "start", destroyMethod = "stop")
     @Profile("test")
     public Server inMemoryH2DatabaseServer() throws SQLException {

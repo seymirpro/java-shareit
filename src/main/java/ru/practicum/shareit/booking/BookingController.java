@@ -17,9 +17,7 @@ import javax.websocket.server.PathParam;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
+
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
