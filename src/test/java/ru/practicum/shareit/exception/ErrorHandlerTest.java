@@ -86,9 +86,8 @@ public class ErrorHandlerTest {
     @Test
     public void testHandleGeneralExceptions() throws Exception {
         when(userController
-                .getUsers()).
-                thenThrow(
-                        new IllegalArgumentException("Invalid argument"));
+                .getUsers())
+                .thenThrow(new IllegalArgumentException("Invalid argument"));
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isInternalServerError());
