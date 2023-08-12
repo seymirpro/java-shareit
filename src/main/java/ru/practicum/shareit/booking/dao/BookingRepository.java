@@ -41,7 +41,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b " +
             "FROM Booking b JOIN b.item JOIN b.booker WHERE 1=1 " +
             "AND b.booker.id=:userId " +
-            "AND CURRENT_TIMESTAMP() BETWEEN b.start AND b.end " +
+            "AND CURRENT_TIMESTAMP() > b.start AND CURRENT_TIMESTAMP() < b.end " +
             "ORDER BY b.start ASC")
     List<Booking> findCurrentBookingsByBookerId(Long userId, Pageable pageable);
 
