@@ -15,6 +15,6 @@ public class BeanConfig {
     @Profile("test")
     public Server inMemoryH2DatabaseServer() throws SQLException {
         return Server.createTcpServer("-tcp", "-tcpAllowOthers",
-                "-tcpPort", "9090");
+                "-tcpPort", "9091");
     }
 }
