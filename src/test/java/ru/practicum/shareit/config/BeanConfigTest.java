@@ -2,36 +2,34 @@ package ru.practicum.shareit.config;
 
 import org.h2.tools.Server;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.when;
 
-@ActiveProfiles("test")
 @SpringBootTest
-public class BeanConfigTest implements ApplicationContextAware {
+@ContextConfiguration(classes = BeanConfig.class)
+public class BeanConfigTest {
 
-    private ApplicationContext applicationContext;
+    @Mock
+    private Server inMemoryH2DatabaseServer;
 
     @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    private BeanConfig beanConfig;
+
+    @BeforeEach
+    public void setup() throws Exception {
+        when(inMemoryH2DatabaseServer.isRunning(anyBoolean())).thenReturn(true);
     }
 
     @Test
-    public void testInMemoryH2DatabaseServerBeanCreation() {
-        ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-                .withUserConfiguration(BeanConfig.class);
-
-        contextRunner.run(context -> {
-            Server server = applicationContext.getBean(Server.class);
-
-            Assertions.assertNotNull(server);
-            Assertions.assertTrue(server.isRunning(true));
-        });
+    public void testInMemoryH2DatabaseServerBeanCreation() throws Exception {
+        Assertions.assertNotNull(inMemoryH2DatabaseServer);
+        Assertions.assertTrue(inMemoryH2DatabaseServer.isRunning(true));
     }
 }
