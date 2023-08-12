@@ -16,8 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CommentMapperTest {
 
-    private CommentMapper commentMapper;
-
     @BeforeEach
     void setUp() {
     }
@@ -29,7 +27,7 @@ class CommentMapperTest {
         commentDto.setText("Test comment");
         commentDto.setItemId(100L);
 
-        Comment comment = commentMapper.toComment(commentDto);
+        Comment comment = CommentMapper.toComment(commentDto);
 
         assertEquals(1L, comment.getAuthor().getId());
         assertEquals("Test comment", comment.getText());
@@ -49,7 +47,7 @@ class CommentMapperTest {
         comment.setCreated(LocalDateTime.now());
         comment.getAuthor().setName("John Doe");
 
-        CommentGetDto commentGetDto = commentMapper.toCommentGetDto(comment);
+        CommentGetDto commentGetDto = CommentMapper.toCommentGetDto(comment);
 
         assertEquals(1L, commentGetDto.getId());
         assertEquals("Test comment", commentGetDto.getText());
@@ -83,7 +81,7 @@ class CommentMapperTest {
         comment2.setCreated(LocalDateTime.now());
         comment2.getAuthor().setName("Jane Smith");
 
-        List<CommentGetDto> commentGetDtos = commentMapper.toCommentGetDtos(Arrays.asList(comment1, comment2));
+        List<CommentGetDto> commentGetDtos = CommentMapper.toCommentGetDtos(Arrays.asList(comment1, comment2));
 
         assertEquals(2, commentGetDtos.size());
 
