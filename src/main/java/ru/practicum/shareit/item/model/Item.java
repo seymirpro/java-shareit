@@ -38,7 +38,7 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private ItemRequest request;
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.DELETE})
     @JoinColumn(name = "item_id")
     private List<Comment> comments;
