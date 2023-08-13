@@ -3,15 +3,11 @@ package ru.practicum.shareit.item.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.utils.Create;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-/**
- * TODO Sprint add-controllers.
- */
 
 @Data
 @Builder
@@ -24,5 +20,5 @@ public class ItemDto {
     private String description;
     @NotNull(groups = {Create.class})
     private Boolean available;
-    private ItemRequest itemRequest;
+    private Long requestId;
 }

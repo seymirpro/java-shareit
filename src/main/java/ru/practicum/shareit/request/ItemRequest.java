@@ -1,19 +1,38 @@
 package ru.practicum.shareit.request;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder
+@Entity
+@Table(name = "item_requests")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemRequest {
-    private final int id;
-    private final String description;
-    private final User requestor;
-    private final LocalDateTime created;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String description;
+    @ManyToOne
+    @JoinColumn(name = "requestor_id")
+    private User requestor;
+
+    @Column(name = "created")
+    private LocalDateTime created;
+
+    @PrePersist
+    public void prePersist() {
+        created = LocalDateTime.now();
+    }
+
+    @OneToMany(mappedBy = "request")
+    @ToString.Exclude
+    private Set<Item> items = new HashSet<>();
 }

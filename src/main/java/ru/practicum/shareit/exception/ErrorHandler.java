@@ -15,17 +15,19 @@ import ru.practicum.shareit.exception.comment.CommentBadRequestException;
 import ru.practicum.shareit.exception.item.ItemDoesNotExistException;
 import ru.practicum.shareit.exception.item.ItemNotAvailableException;
 import ru.practicum.shareit.exception.item.NotItemOwnerException;
+import ru.practicum.shareit.exception.request.ItemRequestDoesNotExistException;
 import ru.practicum.shareit.exception.user.DuplicateEmailException;
 import ru.practicum.shareit.exception.user.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.user.UserDoesNotExistException;
 import ru.practicum.shareit.item.ItemController;
+import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.user.UserController;
 
 import javax.validation.ValidationException;
 import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice(assignableTypes = {UserController.class, ItemController.class,
-        BookingController.class})
+        BookingController.class, ItemRequestController.class})
 public class ErrorHandler {
     @ExceptionHandler({UserAlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -54,7 +56,8 @@ public class ErrorHandler {
     @ExceptionHandler({UserDoesNotExistException.class,
             ItemDoesNotExistException.class,
             NotItemOwnerException.class,
-            BookingDoesNotExistException.class
+            BookingDoesNotExistException.class,
+            ItemRequestDoesNotExistException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserDoesNotExistException(final Throwable ex) {

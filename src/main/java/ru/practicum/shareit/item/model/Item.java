@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 @Getter
 @Setter
+@ToString
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +32,14 @@ public class Item {
     private String description;
     @Column(name = "available", nullable = false)
     private Boolean available;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
-    @Transient
-    private final ItemRequest request;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private ItemRequest request;
+    @OneToMany(orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE})
     @JoinColumn(name = "item_id")
     private List<Comment> comments;
 }

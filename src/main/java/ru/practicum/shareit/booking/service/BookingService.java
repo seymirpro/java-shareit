@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dao.BookingRepository;
@@ -113,27 +115,28 @@ public class BookingService {
         return bookingRepository.findById(bookingId).orElseThrow(BookingDoesNotExistException::new);
     }
 
-    public List<BookingGetDto> getAllBookings(Long userId, String state) {
+    public List<BookingGetDto> getAllBookings(Long userId, String state, int from, int size) {
         User user = getUserByIdIfExistsOrThrowException(userId);
         List<Booking> res = null;
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : from, size);
         switch (state) {
             case "ALL":
-                res = bookingRepository.findAllByBookerId(userId);
+                res = bookingRepository.findAllByBookerId(userId, pageable);
                 break;
             case "CURRENT":
-                res = bookingRepository.findCurrentBookingsByBookerId(userId);
+                res = bookingRepository.findCurrentBookingsByBookerId(userId, pageable);
                 break;
             case "PAST":
-                res = bookingRepository.findPastBookingsByBookerId(userId);
+                res = bookingRepository.findPastBookingsByBookerId(userId, pageable);
                 break;
             case "FUTURE":
-                res = bookingRepository.findFutureBookingsByBookerId(userId);
+                res = bookingRepository.findFutureBookingsByBookerId(userId, pageable);
                 break;
             case "WAITING":
-                res = bookingRepository.findWaitingBookingsByBookerId(userId);
+                res = bookingRepository.findWaitingBookingsByBookerId(userId, pageable);
                 break;
             case "REJECTED":
-                res = bookingRepository.findRejectedBookingsByBookerId(userId);
+                res = bookingRepository.findRejectedBookingsByBookerId(userId, pageable);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown state: %s", state));
@@ -142,27 +145,29 @@ public class BookingService {
         return BookingMapper.toBookingGetDtoList(res);
     }
 
-    public List<BookingGetDto> getAllBookingsForItemOwner(long itemOwnerId, String state) {
+    public List<BookingGetDto> getAllBookingsForItemOwner(long itemOwnerId, String state, int from, int size) {
         User user = getUserByIdIfExistsOrThrowException(itemOwnerId);
+
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : from, size);
         List<Booking> bookings = null;
         switch (state) {
             case "ALL":
-                bookings = bookingRepository.findAllByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findAllByItemOwnerId(itemOwnerId, pageable);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findFutureBookingsByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findFutureBookingsByItemOwnerId(itemOwnerId, pageable);
                 break;
             case "REJECTED":
-                bookings = bookingRepository.findRejectedBookingsByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findRejectedBookingsByItemOwnerId(itemOwnerId, pageable);
                 break;
             case "WAITING":
-                bookings = bookingRepository.findWaitingBookingsByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findWaitingBookingsByItemOwnerId(itemOwnerId, pageable);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findCurrentBookingsByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findCurrentBookingsByItemOwnerId(itemOwnerId, pageable);
                 break;
             case "PAST":
-                bookings = bookingRepository.findPastBookingsByItemOwnerId(itemOwnerId);
+                bookings = bookingRepository.findPastBookingsByItemOwnerId(itemOwnerId, pageable);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown state: %s", state));

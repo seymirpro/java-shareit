@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.comment.CommentBadRequestException;
 import ru.practicum.shareit.exception.item.ItemDoesNotExistException;
 import ru.practicum.shareit.exception.item.NotItemOwnerException;
+import ru.practicum.shareit.exception.request.ItemRequestDoesNotExistException;
 import ru.practicum.shareit.exception.user.UserDoesNotExistException;
 import ru.practicum.shareit.item.comment.dao.CommentRepository;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
@@ -20,6 +21,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -36,22 +39,34 @@ public class ItemServiceImpl {
     private BookingRepository bookingRepository;
     private CommentRepository commentRepository;
 
+    private ItemRequestRepository itemRequestRepository;
+
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository,
                            UserRepository userRepository,
                            BookingRepository bookingRepository,
-                           CommentRepository commentRepository
+                           CommentRepository commentRepository,
+                           ItemRequestRepository itemRequestRepository
     ) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.itemRequestRepository = itemRequestRepository;
     }
 
     public ItemDto createItem(long id, ItemDto itemDto) {
         Item item = ItemMapper.toItem(itemDto);
         User user = userRepository.findById(id).orElseThrow(UserDoesNotExistException::new);
         item.setOwner(user);
+
+        if (itemDto.getRequestId() != null) {
+            ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(
+                    ItemRequestDoesNotExistException::new
+            );
+            item.setRequest(request);
+        }
+
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
