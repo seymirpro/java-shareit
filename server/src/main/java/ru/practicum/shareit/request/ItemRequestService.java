@@ -12,6 +12,7 @@ import ru.practicum.shareit.request.dto.ItemRequestGetDto;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class ItemRequestService {
         User user = userRepository.findById(userId).orElseThrow(UserDoesNotExistException::new);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestCreateUpdateDto);
         itemRequest.setRequestor(user);
+        itemRequest.setCreated(LocalDateTime.now());
         ItemRequest newItemRequest = itemRequestRepository.save(itemRequest);
         return ItemRequestMapper.toItemRequestGetDto(newItemRequest);
     }

@@ -27,11 +27,6 @@ public class ItemRequest {
     @Column(name = "created")
     private LocalDateTime created;
 
-    @PrePersist
-    public void prePersist() {
-        created = LocalDateTime.now();
-    }
-
     @OneToMany(mappedBy = "request")
     @ToString.Exclude
     private Set<Item> items = new HashSet<>();

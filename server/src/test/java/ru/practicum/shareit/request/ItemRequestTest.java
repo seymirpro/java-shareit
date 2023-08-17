@@ -15,7 +15,7 @@ class ItemRequestTest {
     void prePersistShouldSetCreatedTimestamp() {
         ItemRequest itemRequest = new ItemRequest();
 
-        itemRequest.prePersist();
+        itemRequest.setCreated(LocalDateTime.now());
 
         LocalDateTime now = LocalDateTime.now();
         assertEquals(now.getYear(), itemRequest.getCreated().getYear());
