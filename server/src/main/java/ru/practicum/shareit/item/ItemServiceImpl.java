@@ -141,7 +141,7 @@ public class ItemServiceImpl {
             ItemOwnerDto itemOwnerDto = ItemMapper.itemOwnerDto(item, lastBooking.orElse(null),
                     nextBooking.orElse(null));
             return itemOwnerDto;
-        }).collect(Collectors.toList());
+        }).sorted(Comparator.comparing(ItemOwnerDto::getId)).collect(Collectors.toList());
     }
 
     public List<ItemDto> getItemsBySearchKeywords(String searchText) {
