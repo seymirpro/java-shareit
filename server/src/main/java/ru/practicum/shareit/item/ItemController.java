@@ -53,8 +53,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItemsBySearchKeywords(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                  @RequestParam("text") String searchText) {
+    public List<ItemDto> getItemsBySearchKeywords(@RequestParam("text") String searchText) {
         return itemServiceImpl.getItemsBySearchKeywords(searchText);
     }
 
