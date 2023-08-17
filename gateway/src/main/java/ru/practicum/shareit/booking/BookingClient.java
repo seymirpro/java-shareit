@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.booking.dto.BookingCreateUpdateDto;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
@@ -27,21 +26,38 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getBookings(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> createBooking(long userId, BookingCreateUpdateDto bookingRequestDto) {
+        return post("/", userId, bookingRequestDto);
+    }
+
+    public ResponseEntity<Object> updateBooking(long bookingId, Boolean approved, long userId) {
+        return patch("/" + bookingId + "/?approved=" + approved, userId);
+    }
+
+    public ResponseEntity<Object> getBookings(long userId, String state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
-                "state", state.name(),
+                "state", state.toUpperCase(),
                 "from", from,
                 "size", size
         );
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-
-    public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
-        return post("", userId, requestDto);
+    public ResponseEntity<Object> getBookingByUserIdAndState(String state, long userId, int from, int size) {
+        return get("?state={state}&from={from}&size={size}",
+                userId, Map.of("state", state.toUpperCase(), "from", from, "size", size)
+        );
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<Object> getOwnerBookedItems(String state, long userId, int from, int size) {
+        return get("/owner?state={state}&from={from}&size={size}",
+                userId, Map.of("state", state.toUpperCase(), "from", from, "size", size
+                ));
+    }
+
+    public ResponseEntity<Object> getBooking(long bookingId, long userId) {
         return get("/" + bookingId, userId);
     }
+
+
 }
