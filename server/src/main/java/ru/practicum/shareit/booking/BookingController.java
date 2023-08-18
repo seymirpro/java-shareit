@@ -3,16 +3,11 @@ package ru.practicum.shareit.booking;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreateUpdateDto;
 import ru.practicum.shareit.booking.dto.BookingGetDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.utils.Create;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.websocket.server.PathParam;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -31,7 +26,7 @@ public class BookingController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public BookingGetDto createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                       @Validated({Create.class}) @Valid @RequestBody BookingCreateUpdateDto bookingCreateUpdateDto) {
+                                       @RequestBody BookingCreateUpdateDto bookingCreateUpdateDto) {
         return bookingService.createBooking(userId, bookingCreateUpdateDto);
     }
 
@@ -51,8 +46,8 @@ public class BookingController {
     @GetMapping
     public List<BookingGetDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") Long userId,
                                               @RequestParam(defaultValue = "ALL") String state,
-                                              @RequestParam(defaultValue = "0") @Min(0) int from,
-                                              @RequestParam(defaultValue = "20") @Min(1) @Max(20) int size
+                                              @RequestParam(defaultValue = "0") int from,
+                                              @RequestParam(defaultValue = "20") int size
     ) {
         return bookingService.getAllBookings(userId, state, from, size);
     }
@@ -60,8 +55,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingGetDto> getAllBookingsForItemOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                                           @RequestParam(defaultValue = "ALL") String state,
-                                                          @RequestParam(defaultValue = "0") @Min(0) int from,
-                                                          @RequestParam(defaultValue = "20") @Min(1) @Max(20) int size) {
+                                                          @RequestParam(defaultValue = "0") int from,
+                                                          @RequestParam(defaultValue = "20") int size) {
         return bookingService.getAllBookingsForItemOwner(ownerId, state, from, size);
     }
 }

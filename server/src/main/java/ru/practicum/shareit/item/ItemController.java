@@ -12,7 +12,6 @@ import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.utils.Create;
 import ru.practicum.shareit.utils.Update;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +28,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long id, @Validated({Create.class}) @RequestBody
-    @Valid @NonNull ItemDto itemDto) {
+    @NonNull ItemDto itemDto) {
         return itemServiceImpl.createItem(id, itemDto);
     }
 

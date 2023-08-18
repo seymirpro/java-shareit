@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.utils.Create;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,10 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookingCreateUpdateDto {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @NotNull(groups = Create.class)
     private LocalDateTime start;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @NotNull(groups = Create.class)
     private LocalDateTime end;
     private Long itemId;
 }
