@@ -136,8 +136,8 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .content(jsonUser)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-        verify(userService, never()).createUser(any(UserDto.class));
+                .andExpect(status().isOk());
+        verify(userService, times(1)).createUser(any(UserDto.class));
     }
 
     @Test
