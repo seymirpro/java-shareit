@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.commons.Create;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;
@@ -21,7 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(
-            @NotNull @RequestBody @Valid UserDto userDto) {
+            @NotNull @RequestBody @Validated({Create.class}) @Valid UserDto userDto) {
         return userClient.createUser(userDto);
     }
 
