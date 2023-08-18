@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreateUpdateDto;
+import ru.practicum.shareit.commons.Create;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -20,7 +21,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> createBooking(
-            @RequestBody @Valid BookingCreateUpdateDto bookingRequestDto,
+            @RequestBody @Validated({Create.class}) @Valid BookingCreateUpdateDto bookingRequestDto,
             @RequestHeader("X-Sharer-User-Id") long userId) {
         return bookingClient.createBooking(userId, bookingRequestDto);
     }
